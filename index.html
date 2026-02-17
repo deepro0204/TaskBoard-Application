@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskBoard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       LOGIN PAGE
+  ════════════════════════════════════════ -->
+  <div id="login-page" class="page">
+    <div class="login-bg-glow"></div>
+    <div class="login-card fade-in">
+      <div class="login-logo">
+        <div class="logo-icon">⬡</div>
+        <h1 class="logo-title">TaskBoard</h1>
+        <p class="logo-sub">Sign in to your workspace</p>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label for="email-input">Email</label>
+          <input type="email" id="email-input" placeholder="intern@demo.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="password-input">Password</label>
+          <div class="password-wrap">
+            <input type="password" id="password-input" placeholder="••••••••" autocomplete="current-password" />
+            <button type="button" id="toggle-pw" class="pw-toggle" aria-label="Toggle password">👁</button>
+          </div>
+        </div>
+
+        <div id="login-error" class="error-box hidden"></div>
+
+        <label class="checkbox-label" for="remember-me">
+          <div class="custom-checkbox" id="remember-checkbox" role="checkbox" aria-checked="false" tabindex="0">
+            <span class="check-icon">✓</span>
+          </div>
+          <input type="checkbox" id="remember-me" class="sr-only" />
+          Remember me
+        </label>
+
+        <button type="submit" class="btn-primary btn-block" id="login-btn">
+          <span class="btn-text">Sign In</span>
+          <span class="btn-spinner hidden">⟳</span>
+        </button>
+      </form>
+
+      <p class="login-hint">intern@demo.com · intern123</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       BOARD PAGE
+  ════════════════════════════════════════ -->
+  <div id="board-page" class="page hidden">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-icon logo-sm">⬡</div>
+        <span class="header-title">TaskBoard</span>
+        <div class="header-divider"></div>
+        <span class="header-progress" id="header-progress">0% done</span>
+      </div>
+      <div class="header-right">
+        <button class="btn-ghost" id="log-btn">Activity</button>
+        <button class="btn-danger-ghost" id="reset-btn">Reset</button>
+        <button class="btn-ghost" id="logout-btn">Logout</button>
+      </div>
+    </header>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Search tasks…" class="search-input" />
+        </div>
+        <select id="filter-priority" class="select-input">
+          <option value="All">All Priorities</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+        <button class="btn-ghost sort-btn" id="sort-btn" data-active="false">
+          Sort by Due
+        </button>
+      </div>
+      <button class="btn-primary" id="new-task-btn">+ New Task</button>
+    </div>
+
+    <!-- Board -->
+    <main class="board" id="board">
+      <div class="column" id="col-Todo" data-col="Todo">
+        <div class="col-header col-todo">
+          <div class="col-header-left">
+            <span class="col-dot col-dot-todo"></span>
+            <span class="col-name">Todo</span>
+            <span class="col-count" id="count-Todo">0</span>
+          </div>
+          <button class="col-add-btn col-add-todo" data-col="Todo">+</button>
+        </div>
+        <div class="col-body" id="body-Todo" data-col="Todo"></div>
+      </div>
+
+      <div class="column" id="col-Doing" data-col="Doing">
+        <div class="col-header col-doing">
+          <div class="col-header-left">
+            <span class="col-dot col-dot-doing"></span>
+            <span class="col-name">Doing</span>
+            <span class="col-count" id="count-Doing">0</span>
+          </div>
+          <button class="col-add-btn col-add-doing" data-col="Doing">+</button>
+        </div>
+        <div class="col-body" id="body-Doing" data-col="Doing"></div>
+      </div>
+
+      <div class="column" id="col-Done" data-col="Done">
+        <div class="col-header col-done">
+          <div class="col-header-left">
+            <span class="col-dot col-dot-done"></span>
+            <span class="col-name">Done</span>
+            <span class="col-count" id="count-Done">0</span>
+          </div>
+          <button class="col-add-btn col-add-done" data-col="Done">+</button>
+        </div>
+        <div class="col-body" id="body-Done" data-col="Done"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       TASK MODAL
+  ════════════════════════════════════════ -->
+  <div id="task-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box fade-in">
+      <div class="modal-header">
+        <h2 id="modal-title" class="modal-title">Create Task</h2>
+        <button class="modal-close" id="modal-close">×</button>
+      </div>
+      <form id="task-form" novalidate>
+        <input type="hidden" id="task-id" />
+
+        <div class="form-group">
+          <label for="task-title">Title <span class="required">*</span></label>
+          <input type="text" id="task-title" placeholder="Task title" />
+          <p class="field-error hidden" id="title-error">Title is required</p>
+        </div>
+
+        <div class="form-group">
+          <label for="task-desc">Description</label>
+          <textarea id="task-desc" rows="3" placeholder="Optional description…"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="task-priority">Priority</label>
+            <select id="task-priority">
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="task-column">Column</label>
+            <select id="task-column">
+              <option value="Todo">Todo</option>
+              <option value="Doing">Doing</option>
+              <option value="Done">Done</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="task-due">Due Date</label>
+          <input type="date" id="task-due" />
+        </div>
+
+        <div class="form-group">
+          <label>Tags</label>
+          <div class="tag-input-wrap" id="tag-input-wrap">
+            <div id="tags-container" class="tags-container"></div>
+            <input type="text" id="tag-input" class="tag-text-input" placeholder="Type tag + Enter" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-ghost" id="modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       CONFIRM MODAL
+  ════════════════════════════════════════ -->
+  <div id="confirm-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-box modal-sm fade-in">
+      <div class="modal-header">
+        <h2 class="modal-title">Confirm</h2>
+        <button class="modal-close" id="confirm-close">×</button>
+      </div>
+      <p id="confirm-msg" class="confirm-msg"></p>
+      <div class="modal-footer">
+        <button class="btn-ghost" id="confirm-cancel">Cancel</button>
+        <button class="btn-danger" id="confirm-ok">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       ACTIVITY LOG PANEL
+  ════════════════════════════════════════ -->
+  <div id="log-panel" class="log-panel" aria-label="Activity Log">
+    <div class="log-header">
+      <span class="log-title">Activity Log</span>
+      <button class="modal-close" id="log-close">×</button>
+    </div>
+    <div class="log-body" id="log-body"></div>
+  </div>
+  <div id="log-overlay" class="log-overlay hidden"></div>
+
+  <!-- Toast container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
