@@ -205,8 +205,4 @@ Works in all modern browsers (Chrome, Firefox, Safari, Edge). Requires ES2020+ s
 
 ---
 
-## Submission
-
-- **Deployed URL**: _(paste your Netlify / Vercel / GitHub Pages URL here)_
-- **Source ZIP**: `index.html` + `style.css` + `app.js`
-- **Credentials**: `intern@demo.com` / `intern123`
+**Deployed URL**: https://legendary-sorbet-46aa20.netlify.app/
